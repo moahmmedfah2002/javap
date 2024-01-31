@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+    <display-name>MF</display-name>
+    <servlet>
+        <servlet-name>formulaire</servlet-name>
+        <servlet-class>com.example.firstserv.HelloServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jdbc.Driver</param-name>
+            <param-value>com.mysql.cj.jdbc.Driver</param-value>
+        </init-param>
+        <init-param>
+            <param-name>localisation</param-name>
+            <param-value>jdbc:mysql://mysql-2c3b7474-youssefouhba-1406.a.aivencloud.com:23229/hi</param-value>
+        </init-param>
+
+    </servlet>
+    <servlet>
+        <servlet-name>affichage</servlet-name>
+        <servlet-class>com.example.firstserv.Serv</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>formulaire</servlet-name>
+        <url-pattern>/form</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+
+
+        <servlet-name>affichage</servlet-name>
+        <url-pattern>/affiche</url-pattern>
+    </servlet-mapping>
+</web-app>
