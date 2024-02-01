@@ -7,6 +7,7 @@ import java.io.*;
 
 
 public class Siimple extends HttpServlet{
+    private HttpSession session;
     private PreparedStatement ins;
     private Connection con;
     private String pilot;
@@ -63,17 +64,20 @@ public class Siimple extends HttpServlet{
 
 
             ResultSet res = ins.executeQuery();
+            session=request.getSession();
+            int nb=0;
             while (res.next()) {
+                nb+=1;
                 email = res.getString("email");
                 pass = res.getString("password");
 
-
+                session.setAttribute("email",email);
 
             out.println("    <tr>\n" +
 
                     " <td>"+email+"</td>\n" +
                     "      <td>"+pass+"</td>\n" +
-                    "      <td><form method='get' action='modif'><button type=\"submit\" class=\"btn btn-primary\">Edite</button>\n</form> <form method='get' action='supp'> <button type=\"submit\" class=\"btn btn-danger\">supprimer</button></form>\n</td>\n" +
+                    "      <td><form method='get' action='modif'><button type=\"submit\" class=\"btn btn-primary\">Edite</button>\n</form> <form method='get' action='supp'> <input type='hidden' name='email' value="+email+"><button type=\"submit\" class=\"btn btn-danger\">supprimer</button></form>\n</td>\n" +
                     "    </tr>\n" +
                     "</form>");}
         }catch (SQLException e){
