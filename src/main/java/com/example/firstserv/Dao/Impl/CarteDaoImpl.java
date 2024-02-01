@@ -5,10 +5,10 @@ import com.example.firstserv.Models.Carte;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class CarteDaoImpl extends HttpServlet implements CarteDao {
     private Connection connexion = null;
@@ -35,6 +35,38 @@ public class CarteDaoImpl extends HttpServlet implements CarteDao {
 
 
     @Override
+    public List<Carte> AllCarte() throws SQLException {
+        List<Carte> AllCarte = new ArrayList<Carte>(){};
+        ResultSet resultSet = null;
+
+        try {
+            requete  = "SELECTE * FROM Carte";
+            resultSet = instructions.executeQuery();
+            while (resultSet.next()){
+
+                Carte carte = new Carte(
+                        resultSet.getString("Num_carte"),
+                        resultSet.getString("type_carte"),
+                        resultSet.getString("date_expiration"),
+                        resultSet.getInt("cve"),
+                        resultSet.getBoolean("dotation_statuts"),
+                        resultSet.getInt("id_client")
+                );
+
+                carte.setId_carte(resultSet.getInt("id_carte"));
+
+                AllCarte.add(carte);
+            }
+            return AllCarte;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }finally{
+            connexion.close();
+        }
+        return AllCarte;
+    }
+
+    @Override
     public boolean addCarte(Carte carte) throws SQLException {
         try {
             requete  = "INSERT INTO Carte(Num_carte,type_carte,date_expiration,cve,dotation_statuts,id_client) VALUES(?,?,?,?,?,?)";
@@ -45,12 +77,13 @@ public class CarteDaoImpl extends HttpServlet implements CarteDao {
             instructions.setBoolean(5, carte.isDotation_statuts());
             instructions.setInt(6,carte.getId_client());
             instructions.executeUpdate();
+            return true;
         }catch (SQLException e){
             e.printStackTrace();
+            return false;
         }finally{
             connexion.close();
         }
-        return false;
     }
 
     @Override
@@ -65,12 +98,28 @@ public class CarteDaoImpl extends HttpServlet implements CarteDao {
             instructions.setInt(6,carte.getId_client());
             instructions.setInt(7, carte.getId_carte());
             instructions.executeUpdate();
+            return true;
         }catch (SQLException e){
             e.printStackTrace();
+            return false;
         }finally{
             connexion.close();
-            return false;
         }
     }
 
+    @Override
+    public boolean DeleteCarte(Carte carte) throws SQLException {
+        try {
+            requete  = "DELETE Carte WHERE id_carte=?";
+            instructions.setInt(1, carte.getId_carte());
+            instructions.executeUpdate();
+            return true;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }finally{
+            connexion.close();
+        }
+    }
 }
+

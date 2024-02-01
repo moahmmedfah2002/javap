@@ -2,18 +2,22 @@ package com.example.firstserv;
 
 import java.io.*;
 import java.sql.*;
+import java.util.List;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
 
 //@WebServlet(name = "helloServlet", value = "/")
-public class HelloServlet extends HttpServlet {
+public class Login extends HttpServlet {
     private  Connection con;
     private String pilot;
     private  String base;
 
-    private   int id;
+    private   String email;
+    private   String pass;
+    private List<String> Email;
+    private String passF;
+    private String emailF;
 
     private PreparedStatement ins;
 
@@ -25,12 +29,15 @@ public class HelloServlet extends HttpServlet {
                 Class.forName(this.pilot);
                 this.con=DriverManager.getConnection(this.base,"avnadmin","AVNS_hdj58afUSowWP3eu2GF");
 
-                    String req="select * from Carte";
+                    String req="select * from Client";
                     ins = con.prepareStatement(req);
                     ResultSet res= ins.executeQuery();
 
                     while(res.next()) {
-                        id = res.getInt("Num_carte");
+                        email = res.getString("email");
+                        pass = res.getString("password");
+
+
 
                     }
             }catch (ClassNotFoundException e){
@@ -42,9 +49,30 @@ public class HelloServlet extends HttpServlet {
     }
     public void doGet(HttpServletRequest request,HttpServletResponse response)
             throws ServletException,IOException {
+        try{String req="select * from Client";
+        ins = con.prepareStatement(req);
+        ResultSet res= ins.executeQuery();
 
-//        response.setContentType("text/html");
-        request.getServletContext().getRequestDispatcher("/WEB-INF/home.jsp").forward(request,response);
+        while(res.next()) {
+            email = res.getString("email");
+            pass = res.getString("password");
+            request.setAttribute("email",email);
+
+
+
+        }
+    }catch (SQLException e){
+        log("Base de donne non trouver");throw new ServletException();
+    }
+
+               if(passF==null||emailF==null) {
+                   request.getServletContext().getRequestDispatcher("/WEB-INF/home.jsp").forward(request, response);
+               }else {
+
+
+                       request.getServletContext().getRequestDispatcher("/WEB-INF/dotation.jsp").forward(request, response);
+
+               }
 //        PrintWriter out =response.getWriter();
 //        out.println("<!DOCTYPE html>");
 //        out.println("<html>");

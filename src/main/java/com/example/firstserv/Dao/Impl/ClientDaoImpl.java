@@ -5,10 +5,9 @@ import com.example.firstserv.Models.Client;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientDaoImpl extends HttpServlet implements ClientDao {
     private Connection connexion = null;
@@ -34,6 +33,36 @@ public class ClientDaoImpl extends HttpServlet implements ClientDao {
     }
 
     @Override
+    public List<Client> AllClient() throws SQLException {
+        List<Client> AllClient = new ArrayList<Client>(){};
+        ResultSet resultSet = null;
+
+        try {
+            requete  = "SELECTE * FROM Client";
+            resultSet = instructions.executeQuery();
+            while (resultSet.next()){
+
+                Client client = new Client(
+                        resultSet.getString("nom"),
+                        resultSet.getString("prenom"),
+                        resultSet.getString("email"),
+                        resultSet.getString("password")
+                );
+
+                client.setId(resultSet.getInt("id"));
+
+                AllClient.add(client);
+            }
+            return AllClient;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }finally{
+            connexion.close();
+        }
+        return AllClient;
+    }
+
+    @Override
     public boolean addClient(Client client) throws SQLException {
         try {
             requete  = "INSERT INTO Client(nom,prenom,email,password) VALUES(?,?,?,?)";
@@ -42,11 +71,12 @@ public class ClientDaoImpl extends HttpServlet implements ClientDao {
             instructions.setString(3,client.getEmail());
             instructions.setString(4, client.getPassword());
             instructions.executeUpdate();
+            return true;
         }catch (SQLException e){
             e.printStackTrace();
+            return false;
         }finally{
             connexion.close();
-            return false;
         }
     }
 
@@ -60,11 +90,27 @@ public class ClientDaoImpl extends HttpServlet implements ClientDao {
             instructions.setString(4, client.getPassword());
             instructions.setInt(5, client.getId());
             instructions.executeUpdate();
+            return true;
         }catch (SQLException e){
             e.printStackTrace();
+            return false;
         }finally{
             connexion.close();
+        }
+    }
+
+    @Override
+    public boolean DeleteClient(Client client) throws SQLException {
+        try {
+            requete  = "DELETE Client WHERE id_client=?";
+            instructions.setInt(1, client.getId());
+            instructions.executeUpdate();
+            return true;
+        }catch (SQLException e){
+            e.printStackTrace();
             return false;
+        }finally{
+            connexion.close();
         }
     }
 }
