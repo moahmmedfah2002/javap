@@ -49,6 +49,7 @@
         <servlet-name>Simple</servlet-name>
         <url-pattern>/simple</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>supp</servlet-name>
         <servlet-class>com.example.firstserv.suppresion</servlet-class>
@@ -64,5 +65,65 @@
     <servlet-mapping>
         <servlet-name>supp</servlet-name>
         <url-pattern>/supp</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Modif</servlet-name>
+        <servlet-class>com.example.firstserv.Modif</servlet-class>
+        <init-param>
+            <param-name>jdbc.Driver</param-name>
+            <param-value>com.mysql.cj.jdbc.Driver</param-value>
+        </init-param>
+        <init-param>
+            <param-name>localisation</param-name>
+            <param-value>jdbc:mysql://mysql-2c3b7474-youssefouhba-1406.a.aivencloud.com:23229/hi</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Modif</servlet-name>
+        <url-pattern>/modif</url-pattern>
+    </servlet-mapping>
+
+    <!-- TEST -->
+    <servlet>
+        <servlet-class>com.example.firstserv.Test</servlet-class>
+        <servlet-name>Test</servlet-name>
+
+        <init-param>
+            <param-name>jdbc.Driver</param-name>
+            <param-value>com.mysql.cj.jdbc.Driver</param-value>
+        </init-param>-param>
+
+        <init-param>
+            <param-name>localisation</param-name>
+            <param-value>jdbc:mysql://mysql-2c3b7474-youssefouhba-1406.a.aivencloud.com:23229/hi</param-value>
+        </init-param>
+
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Test</servlet-name>
+        <url-pattern>/bonjour</url-pattern>
+    </servlet-mapping>
+
+    <!-- FORM-->
+    <servlet>
+        <servlet-class>com.example.firstserv.Form</servlet-class>
+        <servlet-name>Form</servlet-name>
+        <display-name>Formulaire</display-name>
+
+        <init-param>
+            <param-name>jdbc.Driver</param-name>
+            <param-value>com.mysql.cj.jdbc.Driver</param-value>
+        </init-param>-param>
+
+        <init-param>
+            <param-name>localisation</param-name>
+            <param-value>jdbc:mysql://mysql-2c3b7474-youssefouhba-1406.a.aivencloud.com:23229/hi</param-value>
+        </init-param>
+
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Form</servlet-name>
+        <url-pattern>/form</url-pattern>
     </servlet-mapping>
 </web-app>

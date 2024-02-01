@@ -9,6 +9,7 @@ import java.io.*;
 public class Siimple extends HttpServlet{
     private HttpSession session;
     private PreparedStatement ins;
+    private PreparedStatement ins1;
     private Connection con;
     private String pilot;
     private String email;
@@ -23,8 +24,9 @@ public class Siimple extends HttpServlet{
             this.con= DriverManager.getConnection(this.base,"avnadmin","AVNS_hdj58afUSowWP3eu2GF");
 
             String req="select * from Client";
+            String req1="UPDATE Client SET nom = ? , prenom = ? , email = ? , password = ? WHERE id=?";
             ins = con.prepareStatement(req);
-
+            ins1 = con.prepareStatement(req1);
 
 
         }catch (ClassNotFoundException e){
@@ -33,6 +35,22 @@ public class Siimple extends HttpServlet{
         }catch (SQLException e){
             log("Base de donne non trouver");throw new ServletException();
         }
+    }
+
+    public void doPost(HttpServletRequest request,HttpServletResponse response)throws ServletException,IOException{
+        session=request.getSession();
+        int id = (Integer) session.getAttribute("id");
+        try {
+            ins1.setString(1,request.getParameter("nom"));
+            ins1.setString(2, request.getParameter("prenom"));
+            ins1.setString(3,request.getParameter("email"));
+            ins1.setString(4, request.getParameter("password"));
+            ins1.setInt(5, id);
+            ins1.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        this.doGet(request,response);
     }
     public void doGet(HttpServletRequest request,HttpServletResponse response)throws ServletException,IOException{
         response.setContentType("text/html");
@@ -56,7 +74,7 @@ public class Siimple extends HttpServlet{
                 "    <tr>\n" +
                 "      <th scope=\"col\">Email</th>\n" +
                 "      <th scope=\"col\">Password</th>\n" +
-                "      <th scope=\"col\">modif</th>\n" +
+                "      <th scope=\"col\">Modif</th>\n" +
                 "    </tr>\n" +
                 "  </thead>\n" +
                 "  <tbody class=\"table-group-divider\">\n" );
@@ -71,18 +89,32 @@ public class Siimple extends HttpServlet{
                 email = res.getString("email");
                 pass = res.getString("password");
 
-                session.setAttribute("email",email);
+                session.setAttribute("id",res.getInt("id"));
+            }
+        }catch (SQLException e){
+
+            }
 
             out.println("    <tr>\n" +
 
                     " <td>"+email+"</td>\n" +
                     "      <td>"+pass+"</td>\n" +
-                    "      <td><form method='get' action='modif'><button type=\"submit\" class=\"btn btn-primary\">Edite</button>\n</form> <form method='get' action='supp'> <input type='hidden' name='email' value="+email+"><button type=\"submit\" class=\"btn btn-danger\">supprimer</button></form>\n</td>\n" +
+                    "      <td>" +
+                    "<form method='get' action='modif'>" +
+                    "<button type=\"submit\" class=\"btn btn-primary\">" +
+                    "Edite" +
+                    "</button>\n" +
+                    "</form> " +
+                    "<form method='get' action='supp'>" +
+                    "<input type='hidden' name='email' value="+email+">" +
+                    "<button type=\"submit\" class=\"btn btn-danger\">" +
+                    "supprimer" +
+                    "</button>" +
+                    "</form>\n" +
+                    "</td>\n" +
                     "    </tr>\n" +
-                    "</form>");}
-        }catch (SQLException e){
+                    "</form>");
 
-        }
         out.println(        "  </tbody>\n" +
                 "</table>" +
                 "</body>" +

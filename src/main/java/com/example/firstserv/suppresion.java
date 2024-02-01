@@ -22,7 +22,7 @@ public class suppresion extends HttpServlet {
                         Class.forName(this.pilot);
                         this.con= DriverManager.getConnection(this.base,"avnadmin","AVNS_hdj58afUSowWP3eu2GF");
 
-                        String req="DELETE  from Client WHERE email like ?";
+                        String req="DELETE  from Client WHERE id = ?";
                         ins = con.prepareStatement(req);
 
 
@@ -35,21 +35,28 @@ public class suppresion extends HttpServlet {
                 }
         }
         public void doGet(HttpServletRequest request,HttpServletResponse response)throws ServletException,IOException{
-                        session=request.getSession();
-                        String email= (String) request.getParameter("email");
+
+
 
                         PrintWriter out =response.getWriter();
                         response.setContentType("text/html");
-                        out.println(email);
-                        try {
-                                ins.setString(1, email);
 
-                                ins.execute();
+                        try {
+
+                            session=request.getSession();
+                            int id = (Integer) session.getAttribute("id");
+                            ins.setInt(1, id);
+
+                            ins.execute();
 
                         }catch (SQLException e)
                         {
                                // throw new ServletException();
                         }
+
+                        new Siimple().doGet(request, response);
+
+
         }
 //        public void doDelete(HttpServletRequest request,HttpServletResponse response)throws ServletException,IOException{
 //                doGet(request,response);
